@@ -1,3 +1,4 @@
+
 <?php
 session_start();
 if (!isset($_SESSION['userID']) ||!isset($_SESSION['userType'])) {
@@ -125,8 +126,8 @@ $appointments = getAppointmentInfo($pdo, $doctorID);
         nav ul li .login-btn i:hover {
             color: rgba(255, 255, 255, 0.7);
         }
-		
-		.sidebar {
+    
+    .sidebar {
             background-color: #fff;
             color: #fff;
             padding: 20px;
@@ -134,7 +135,8 @@ $appointments = getAppointmentInfo($pdo, $doctorID);
             border-radius: 10px;
         }
 
-        .sidebar button {
+
+.sidebar button {
             display: inline-block;
             width: 100%;
             background: #fff; /* Changed to white background */
@@ -243,26 +245,26 @@ $appointments = getAppointmentInfo($pdo, $doctorID);
             transition: all 0.3s ease;
             margin-left: 10px;
         }
-		.edit-btn {
-		  background-color: #4CAF50; /* Green */
-		  color: #fff;
-		  padding: 10px 20px;
-		  border: none;
-		  border-radius: 5px;
-		  cursor: pointer;
-		  font-size: 16px;
-		  font-weight: 500
-		  text-transform: uppercase;
-		  letter-spacing: 1px;
-		  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-		}
+    .edit-btn {
+      background-color: #4CAF50; /* Green */
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 500
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
 
-		.edit-btn:hover {
-		  background-color: #3e8e41; /* Darker green on hover */
-		  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-		}
-		
-		.top-buttons {
+    .edit-btn:hover {
+      background-color: #3e8e41; /* Darker green on hover */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .top-buttons {
             display: flex;
             justify-content: center;
             margin-bottom: 20px;
@@ -284,7 +286,8 @@ $appointments = getAppointmentInfo($pdo, $doctorID);
             background: linear-gradient(-135deg, #c850c0, #4158d0);
         }
 
-        .top-buttons button:hover {
+
+.top-buttons button:hover {
             background-color: rgba(255, 255, 255, 0.1);
         }
     .header-logout{
@@ -312,7 +315,7 @@ $appointments = getAppointmentInfo($pdo, $doctorID);
         <nav>
             <div class="header-logout" onclick="if (confirm('Are you sure you want to log out?')) window.location.href = 'logout.php'">
             <img src="https://cdn-icons-png.flaticon.com/128/3889/3889524.png" alt="Logout">
-			</div>
+      </div>
         </nav>
     </header>
 <?php
@@ -322,42 +325,47 @@ if ($appointments) {
         <div id="appointment" class="appointment-list">
             <h2>Appointment List</h2>
             <table class="transparent-table">
-				<thead>
-				<tr>
+        <thead>
+        <tr>
                 <th>Appointment Status</th>
                 <th>Appointment ID</th>
-				<th>Patient ID</th>
+        <th>Patient ID</th>
                 <th>Patient Name</th>
                 <th>Appointment Date</th>
                 <th>Time Slot</th>
                 <th>Diagnosis</th>
                 <th>Prescription</th>
-				<th>MC ID</th>
-				<th>Edit Appointment</th>
+        <th>MC ID</th>
+        <th>Edit Appointment</th>
             </tr>
-			</thead>
-			<tbody>
+      </thead>
+      <tbody>
             <?php foreach ($appointments as $appointment) {?>
             <tr>
                 <td><?= $appointment['appointmentStatus']?></td>
                 <td><?= $appointment['appointmentID']?></td>
-				<td><?= $appointment['patientID']?></td>
-				<td><?= $appointment['patientName']?></td>
-				<td><?= $appointment['appointmentDate']?></td>
+        <td><?= $appointment['patientID']?></td>
+        <td><?= $appointment['patientName']?></td>
+        <td><?= $appointment['appointmentDate']?></td>
                 <td><?= $appointment['timeSlot']?></td>
                 <td><?= $appointment['diagnosis']?></td>
                 <td><?= $appointment['medName']?></td>
-				<td><?= $appointment['mcSerialNumber']?></td>
+        <td><?= $appointment['mcSerialNumber']?></td>
                 <td>
-					<?php if ($appointment['appointmentStatus'] == 'Pending') {?>
-						<button class="edit-btn" onclick="location.href='editApp.php?userType=doctor&userID=<?= $doctorID?>&appointmentID=<?= $appointment['appointmentID']?>'">EDIT</button>
-					<?php }?>
-				</td>
+          <?php if ($appointment['appointmentStatus'] == 'Pending') {?>
+            <button class="edit-btn" onclick="location.href='editApp.php?userType=doctor&userID=<?= $doctorID ?>&appointmentID=<?= $appointment['appointmentID'] ?>'">EDIT</button>
+          <?php }?>
+        </td>
             </tr>
             <?php }?>
-			</table>
-		</table>
+      </table>
+	  
+    </table>
     </div>
+	<div class="field">
+            <button onclick="window.location.href='medicalCerts.php'">GENERATE MEDICAL CERTIFICATE</button>
+        </div>
+	
     <?php
 } else {
     echo "No appointments found!";
