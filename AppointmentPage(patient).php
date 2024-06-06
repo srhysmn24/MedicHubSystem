@@ -332,6 +332,7 @@ if ($appointments) {
                 <th>Medicine Name</th>
                 <th>Appointment Status</th>
 				<th>Medical Certificate</th>
+				<th>Update Appointment</th>
             </tr>
 			</thead>
 			<tbody>
@@ -345,11 +346,15 @@ if ($appointments) {
                 <td><?= $appointment['medName']?></td>
                 <td><?= $appointment['appointmentStatus']?></td>
 				<td><button class="edit-btn" onclick="location.href='mcPatient.php?userType=patient&userID=<?= $patientID?>&appointmentID=<?= $appointment['appointmentID']?>'">Download</button></td>
+				<td><button class="edit-btn" onclick="location.href='updateApp(pat).php?userType=patient&userID=<?= $patientID?>&appointmentID=<?= $appointment['appointmentID']?>'">Update</button></td>
             </tr>
             <?php }?>
 			</table>
 		</table>
     </div>
+	<div class="field">
+            <button onclick="window.location.href='medicalCerts.php'">BOOK NEW APPOINTMENT</button>
+        </div>
 	
     <?php
 } else {
