@@ -44,7 +44,7 @@ if ($stmt->rowCount() == 1) {
         if (isset($_SESSION['adminID'])) {
             header("Location: homePageAdmin.html?userType=admin&adminID=" . $_SESSION['adminID'] . "&userID=" . $_SESSION['userID']); // Redirect to admin dashboard
         } elseif (isset($_SESSION['doctorID'])) {
-            header("Location: homePageStaff.php?userType=doctor&doctorID=" . $_SESSION['doctorID'] . "&userID=" . $_SESSION['userID']); // Redirect to staff dashboard
+            header("Location: homePageStaff.html?userType=doctor&doctorID=" . $_SESSION['doctorID'] . "&userID=" . $_SESSION['userID']); // Redirect to staff dashboard
         }
     } else {
         header("Location: patientDashboard.html?userType=patient&patientID=" . $_SESSION['patientID'] . "&userID=" . $_SESSION['userID']); // Redirect to patient dashboard

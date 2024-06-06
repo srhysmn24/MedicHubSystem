@@ -1,0 +1,81 @@
+<?php
+session_start();
+if (!isset($_SESSION['userID']) || !isset($_SESSION['userType'])) {
+    echo "Session variables not set!";
+    exit;
+}
+
+include("dbconn.php");
+$pdo = $conn;
+
+// Get doctor ID from session
+$doctorID = $_SESSION['userID'];
+
+// Function to get appointment information based on doctor ID
+function getAppointmentInfo($pdo, $doctorID) {
+    try {
+        $stmt = $pdo->prepare("SELECT DISTINCT a.*, p.patientName, mn.medName, mc.mcSerialNumber
+                              FROM appointment a
+                              LEFT JOIN medicalcertificate mc ON a.appointmentID = mc.appointmentID
+                              LEFT JOIN patient p ON a.patientID = p.patientID 
+                              LEFT JOIN prescription pr ON a.prescriptionID = pr.prescriptionID 
+                              LEFT JOIN medication mn ON pr.medSerialNumber = mn.medSerialNumber 
+                              WHERE a.doctorID = ?");
+        $stmt->bindParam(1, $doctorID, PDO::PARAM_STR);
+        $stmt->execute();
+        $appointments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $appointments;
+    } catch (PDOException $e) {
+        echo "Error: ". $e->getMessage(). "\n"; // Debugging statement
+        return false;
+    }
+}
+
+$appointments = getAppointmentInfo($pdo, $doctorID);
+
+if ($appointments) {
+    ?>
+    <div class="appointment-list">
+        <h2>Appointment List</h2>
+        <table>
+            <tr>
+                <th>Appointment Status</th>
+                <th>Appointment ID</th>
+                <th>Patient ID</th>
+                <th>Patient Name</th>
+                <th>Appointment Date</th>
+                <th>Time Slot</th>
+                <th>Diagnosis</th>
+                <th>Prescription</th>
+                <th>MC ID</th>
+                <th>Edit</th>
+            </tr>
+            <?php foreach ($appointments as $appointment) {?>
+            <tr>
+                <td><?= htmlspecialchars($appointment['appointmentStatus']) ?></td>
+                <td><?= htmlspecialchars($appointment['appointmentID']) ?></td>
+                <td><?= htmlspecialchars($appointment['patientID']) ?></td>
+                <td><?= htmlspecialchars($appointment['patientName']) ?></td>
+                <td><?= htmlspecialchars($appointment['appointmentDate']) ?></td>
+                <td><?= htmlspecialchars($appointment['timeSlot']) ?></td>
+                <td><?= htmlspecialchars($appointment['diagnosis']) ?></td>
+                <td><?= htmlspecialchars($appointment['medName']) ?></td>
+                <td><?= htmlspecialchars($appointment['mcSerialNumber']) ?></td>
+                <td>
+                    <?php if ($appointment['appointmentStatus'] === 'pending') { ?>
+                        <a href="editApp.php?userType=doctor&userID=<?= htmlspecialchars($doctorID) ?>&appointmentID=<?= htmlspecialchars($appointment['appointmentID']) ?>" class="edit-button">EDIT APPOINTMENT</a>
+                    <?php } else { ?>
+                        <!-- Debugging output -->
+                        <span>No Edit (Status: <?= htmlspecialchars($appointment['appointmentStatus']) ?>)</span>
+                    <?php } ?>
+                </td>
+            </tr>
+            <?php }?>
+        </table>
+    </div>
+    <?php
+} else {
+    echo "No appointments found!";
+}
+?>
