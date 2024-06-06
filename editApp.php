@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['userID']) ||!isset($_SESSION['userType'])) {
+if (!isset($_SESSION['userID']) || !isset($_SESSION['userType'])) {
     echo "Session variables not set!";
     exit;
 }
@@ -10,26 +10,9 @@ $pdo = $conn;
 
 $userType = $_GET['userType'];
 $userID = $_GET['userID'];
+$appointmentID = $_GET['appointmentID'];
 
-function getAppInfo($pdo, $doctorID) {
-    try {
-        $stmt = $pdo->prepare("SELECT * FROM doctor WHERE doctorID =?");
-        $stmt->bindParam(1, $doctorID, PDO::PARAM_STR);
-        $stmt->execute();
-        $doctor = $stmt->fetch();
-        if ($doctor) {
-            return $doctor;
-        } else {
-            echo "Doctor with ID $doctorID not found in the database!\n";
-            return false;
-        }
-    } catch (PDOException $e) {
-        echo "Error: ". $e->getMessage(). "\n";
-        return false;
-    }
-}
-
-function getAppointmentInfo($pdo, $doctorID) {
+function getAppointmentInfo($pdo, $appointmentID) {
     try {
         $stmt = $pdo->prepare("SELECT DISTINCT a.*, p.patientName, mn.medName, mc.mcSerialNumber
                               FROM appointment a
@@ -37,14 +20,14 @@ function getAppointmentInfo($pdo, $doctorID) {
                               LEFT JOIN patient p ON a.patientID = p.patientID 
                               LEFT JOIN prescription pr ON a.prescriptionID = pr.prescriptionID 
                               LEFT JOIN medication mn ON pr.medSerialNumber = mn.medSerialNumber 
-                              WHERE a.doctorID =?");
-        $stmt->bindParam(1, $doctorID, PDO::PARAM_STR);
+                              WHERE a.appointmentID =?");
+        $stmt->bindParam(1, $appointmentID, PDO::PARAM_STR);
         $stmt->execute();
         $appointment = $stmt->fetch();
         if ($appointment) {
             return $appointment;
         } else {
-            echo "Appointment not found for doctor ID $doctorID!\n";
+            echo "Appointment not found for appointment ID $appointmentID!\n";
             return false;
         }
     } catch (PDOException $e) {
@@ -54,35 +37,34 @@ function getAppointmentInfo($pdo, $doctorID) {
 }
 
 if ($userType === 'doctor') {
-    $doctor = getAppInfo($pdo, $userID);
-    if ($doctor) {
-        $appointment = getAppointmentInfo($pdo, $userID);
-        if ($appointment) {
-           ?>
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Edit Appointment</title>
-                <style>
-                    
-                </style>
-            </head>
-            <body>
-                <header>
-                    <h1>Welcome to MedicHub</h1>
-                    <nav>
-                        <ul>
-                            <li><a href="homePage.html#about-us">About Us</a></li>
-                            <li><a href="homePage.html#services">Services</a></li>
-                            <li><a href="homePage.html#contact">Contact</a></li>
-                        </ul>
-                    </nav>
-                </header>
-                <div class="appointment-card">
-                    <h2>Edit Appointment</h2>
-                    <form method="POST" action="updateApp.php">
+    $appointment = getAppointmentInfo($pdo, $appointmentID);
+    if ($appointment) {
+        ?>
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Edit Appointment</title>
+            <style>
+                /* Add your CSS here */
+            </style>
+        </head>
+        <body>
+            <header>
+                <h1>Welcome to MedicHub</h1>
+                <nav>
+                    <ul>
+                        <li><a href="homePage.html#about-us">About Us</a></li>
+                        <li><a href="homePage.html#services">Services</a></li>
+                        <li><a href="homePage.html#contact">Contact</a></li>
+                    </ul>
+                </nav>
+            </header>
+            <div class="appointment-card">
+                <h2>Edit Appointment</h2>
+                <form method="POST" action="updateApp.php">
+                    <input type="hidden" name="appointmentID" value="<?php echo $appointmentID; ?>">
                     <label for="diagnosis">Diagnosis:</label>
                     <input type="text" id="diagnosis" name="diagnosis" value="<?php echo $appointment['diagnosis'];?>" required>
                     <label for="appointmentStatus">Appointment Status:</label>
@@ -90,16 +72,13 @@ if ($userType === 'doctor') {
                     <label for="medName">Medicine Name:</label>
                     <input type="text" id="medName" name="medName" value="<?php echo $appointment['medName'];?>" required>
                     <button type="submit" class="submit-button">SUBMIT</button>
-                    </form>
-                </div>
-            </body>
+                </form>
+            </div>
+        </body>
         </html>
         <?php
-        } else {
-            echo "Appointment not found!";
-        }
     } else {
-        echo "Doctor not found!";
+        echo "Appointment not found!";
     }
 } else {
     echo "Invalid user type!";
