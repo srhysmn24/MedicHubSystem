@@ -234,6 +234,7 @@ try {
                         <th>EXP</th>
                         <th>QUANTITY</th>
                         <th>MFG. FACTORY</th>
+						<th>EDIT QUANTITY</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -247,7 +248,7 @@ try {
                             echo "<td>" . htmlspecialchars($row['expDate']) . "</td>";
                             echo "<td>" . htmlspecialchars($row['quantity']) . "</td>";
                             echo "<td>" . htmlspecialchars($row['medFactory']) . "</td>";
-							echo "<td><button class='edit-btn' onclick='editMedicine({$row['medSerialNumber']})'>Edit Quantity</button></td>";
+							echo "<td><button class='edit-btn' onclick='editMedicine({$row['medSerialNumber']})'>Edit</button></td>";
                             echo "</tr>";
                         }
                     } else {
