@@ -14,7 +14,9 @@
         }
 
         body {
-            background-color: #f2f2f2;
+            background: url('https://www.datasciencecentral.com/wp-content/uploads/2022/05/AdobeStock_279695769-930x620.jpg') no-repeat center center fixed;
+            background-size: cover;
+            background-color: rgba(242, 242, 242, 0.8); /* Adjust opacity here */
             color: #262626;
             display: grid;
             height: 100%;
@@ -70,10 +72,13 @@
 
         .wrapper {
             width: 380px;
-            background: #fff;
+            background: rgba(255, 255, 255, 0.8); /* Adjust opacity here */
             border-radius: 15px;
             box-shadow: 0px 15px 20px rgba(0,0,0,0.1);
-            margin-top: 150px; /* Added margin to compensate for fixed header */
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
         }
 
         .wrapper .title {
@@ -89,7 +94,7 @@
 
         .wrapper .title::before {
             content: 'Login';
-            background: linear-gradient(-135deg, #c850c0, #4158d0);
+            background: linear-gradient(-135deg, #290b96, #4158d0);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             position: absolute;
@@ -182,7 +187,7 @@
             font-size: 20px;
             font-weight: 500;
             cursor: pointer;
-            background: linear-gradient(-135deg, #c850c0, #4158d0);
+            background: linear-gradient(-135deg, #290b96, #4158d0);
             transition: all 0.3s ease;
         }
 
@@ -235,22 +240,13 @@
       </style>
    </head>
    <body>
-    <header>
-        <h1>Welcome to MedicHub</h1>
-        <nav>
-            <ul>
-                <li><a href="homePage.html">Home</a></li>
-            </ul>
-        </nav>
-    </header>
-
     <div class="wrapper">
         <div class="title">Login</div>
-        <form action = "login.php" class="form-horizontal"  method="POST" accept-charset="utf-8" onsubmit="return validateAndRedirect()">
+        <form action="login.php" class="form-horizontal" method="POST" accept-charset="utf-8" onsubmit="return validateAndRedirect()">
             <div style="display:none;">
                 <input type="hidden" name="_method" value="POST"/>
             </div>
-            <div class="form-check form-check-inline">
+            <div class="form-check form-check-inline" align="center">
                 <input class="form-check-input" type="radio" name="role" id="staffCheckbox" value="staff" required="required">
                 <label class="form-check-label">Staff</label>
                 <input class="form-check-input" type="radio" name="role" id="patientCheckbox" value="patient" required="required">
@@ -265,15 +261,7 @@
                 <input type="password" name="password" required>
                 <label>Password</label>
             </div>
-            <div class="content">
-                <div class="checkbox">
-                    <input type="checkbox" id="remember-me">
-                    <label for="remember-me">Remember me</label>
-                </div>
-                <div class="pass-link">
-                    <a href="#">Forgot password?</a>
-                </div>
-            </div>
+           
             <div class="field">
                 <input type="submit" value="Login">
             </div>
@@ -285,44 +273,29 @@
 
     <script>
         function validateAndRedirect() {
-    const role = document.querySelector('input[name="role"]:checked').value;
-    const userID = document.getElementById('userID').value;
+            const role = document.querySelector('input[name="role"]:checked').value;
+            const userID = document.getElementById('userID').value;
 
-    // Prepare statement based on the role
-    let stmt;
-    if (role === 'staff') {
-        stmt = $pdo->prepare("SELECT * FROM login WHERE userID =? AND userType IN ('admin', 'doctor')");
-    } else {
-        stmt = $pdo->prepare("SELECT * FROM login WHERE userID =? AND userType = 'patient'");
-    }
-    stmt->execute([$userID]);
+            if (role === 'staff') {
+                if (userID.startsWith('ADM')) {
+                    window.location.href = 'homePageAdmin.html?userType=admin&userID =' + userID;
+                } else if (userID.startsWith('D')) {
+                    window.location.href = 'homePageStaff.html?userType=doctor&userID=' + userID;
+                } else {
+                    alert('Staff ID should start with ADM or D.');
+                    return false;
+                }
+            } else if (role === 'patient') {
+                if (userID.startsWith('P')) {
+                    window.location.href = 'patientDashboard.html?userType=patient&userID=' + userID;
+                } else {
+                    alert('Patient ID should start with P.');
+                    return false;
+                }
+            }
 
-    // Check if user exists
-    if (stmt->rowCount() == 1) {
-        if (role === 'staff') {
-            if (userID.startsWith('ADM')) {
-                window.location.href = 'homePageAdmin.html?userType=admin&userID =' + userID;
-            } else if (userID.startsWith('D')) {
-                window.location.href = 'homePageStaff.php?userType=doctor&userID=' + userID;
-            } else {
-                alert('Staff ID should start with ADM or D.');
-                return false;
-            }
-        } else if (role === 'patient') {
-            if (userID.startsWith('P')) {
-                window.location.href = 'patientDashboard.html?userType=patient&userID=' + userID;
-            } else {
-                alert('Patient ID should start with P.');
-                return false;
-            }
+            return false; 
         }
-    } else {
-        alert('User ID not found in the database.');
-        return false;
-    }
-
-    return false;
-}
     </script>
 </body>
 </html>
