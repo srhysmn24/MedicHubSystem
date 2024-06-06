@@ -1,0 +1,215 @@
+<?php
+session_start();
+
+// Assume you have a database connection and a query to retrieve the doctor's name
+$doctor_name = $_SESSION['doctor_name'];
+
+// Store the doctor's name in a session variable
+$_SESSION['doctor_name'] = $doctor_name;
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedicHub | Doctor</title>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #f2f2f2;
+            color: #262626;
+        }
+
+        header {
+            background: linear-gradient(-135deg, #c850c0, #4158d0);
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        header h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        nav {
+            margin-top: 20px;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            text-align: center;
+        }
+
+        nav ul li {
+            display: inline-block;
+            margin: 0 10px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            background: #fff;
+            color: #fff; /* Changed to white color */
+            font-size: 18px;
+            font-weight: 500;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            background-clip: text;
+            -webkit-background-clip: text;
+            background: linear-gradient(-135deg, #c850c0, #4158d0);
+        }
+
+        nav ul li a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-button {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+        }
+
+        .nav-button img {
+            width: 30px;
+            height: 30px;
+            filter: invert(100%);
+        }
+
+        .container {
+            display: flex;
+            margin: 20px;
+        }
+
+        .sidebar {
+            background-color: #fff;
+            color: #fff;
+            padding: 20px;
+            width: 200px;
+            border-radius: 10px;
+        }
+
+        .sidebar button {
+            display: block;
+            width: 100%;
+            background: #fff; /* Changed to white background */
+            color: #fff; /* Changed to white color */
+            padding: 10px;
+            margin-bottom: 10px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+            background-clip: text;
+            -webkit-background-clip: text;
+            background: linear-gradient(-135deg, #c850c0, #4158d0);
+        }
+
+        .sidebar button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .main-content {
+            flex-grow: 1;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-left: 20px;
+            text-align: center;
+        }
+
+        .main-content img {
+            width: 150px; 
+            height: 150px; 
+            margin-bottom: 20px;
+        }
+
+        .main-content h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .top-buttons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .top-buttons button {
+            background: #fff; /* Changed to white background */
+            color: #fff; /* Changed to white color */
+            border: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+            background-clip: text;
+            -webkit-background-clip: text;
+            background: linear-gradient(-135deg, #c850c0, #4158d0);
+        }
+
+        .top-buttons button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+		.header-logout{
+			position: absolute;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            cursor: pointer;
+		}
+		.header-logout img {
+            width: 30px;
+            height: 30px;
+            filter: invert(100%);
+        }
+
+        .header-logout img:hover {
+            filter: brightness(50%);
+        }
+    </style>
+</head>
+<body>
+<input type="hidden" id="userID" value="<?php echo $_SESSION['userID'];?>">
+    <header>
+        <h1>MEDICHUB</h1>
+        <nav>
+            <div class="header-logout" onclick="if (confirm('Are you sure you want to log out?')) window.location.href = 'logout.php'">
+            <img src="https://cdn-icons-png.flaticon.com/128/3889/3889524.png" alt="Logout">
+			</div>
+        </nav>
+    </header>
+    <div class="container">
+        <div class="sidebar">
+            <button>MEDICAL RECORD</button>
+			<button id="medicine" onclick="window.location.href = 'medicineInventory(doc).php'">MEDICINE</button>
+                <button id="profileButton" onclick="var userID = document.getElementById('userID').value; console.log('userID:', userID); window.location.href = 'profile.php?userType=doctor&userID=' + userID;">MY PROFILE</button>
+                <button id ="apptButton" onclick="window.location.href='AppointmentPage(doc).html'">APPOINTMENT</button>
+            
+        </div>
+        <div class="main-content">
+            
+            <img src="https://i.pinimg.com/564x/ad/74/57/ad745792a51ec9e39f90111739406f81.jpg" alt="Profile Picture">
+            <h2>WELCOME DR <?php echo $_SESSION['doctor_name']; ?>!</h2>
+        </div>
+    </div>
+
+</body>
+</html>
