@@ -350,7 +350,7 @@ if ($appointments) {
 				<td><?= $appointment['mcSerialNumber']?></td>
                 <td>
 					<?php if ($appointment['appointmentStatus'] == 'Pending') {?>
-						<button class="edit-btn" onclick="location.href='editApp.php?userType=doctor&userID=<?= $doctorID?>&appointmentID=<?= $appointment['appointmentID']?>'">EDIT</button>
+						<button class="edit-btn" onclick="location.href='editApp.php?userType=doctor&userID=<?= $doctorID ?>&appointmentID=<?= $appointment['appointmentID'] ?>'">EDIT</button>
 					<?php }?>
 				</td>
             </tr>
