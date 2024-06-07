@@ -1,3 +1,5 @@
+
+
 <?php
 session_start();
 if (!isset($_SESSION['userID']) || !isset($_SESSION['userType'])) {
@@ -14,7 +16,7 @@ $appointmentID = $_GET['appointmentID'];
 
 function getAppointmentInfo($pdo, $appointmentID) {
     try {
-        $stmt = $pdo->prepare("SELECT DISTINCT a.*, p.patientName, mn.medName, mc.mcSerialNumber
+        $stmt = $pdo->prepare("SELECT DISTINCT a.*, p.patientName, mn.medName, mc.mcSerialNumber, pr.prescriptionID
                               FROM appointment a
                               LEFT JOIN medicalcertificate mc ON a.appointmentID = mc.appointmentID
                               LEFT JOIN patient p ON a.patientID = p.patientID 
@@ -71,19 +73,19 @@ if ($userType === 'doctor') {
                     <input type="text" id="diagnosis" name="diagnosis" value="<?php echo $appointment['diagnosis'];?>" required>
                     <label for="appointmentStatus">Appointment Status:</label>
                     <input type="text" id="appointmentStatus" name="appointmentStatus" value="<?php echo $appointment['appointmentStatus'];?>" required>
-                    <label for="medName">Medicine Name:</label>
-                    <select id="medName" name="medName" required>
-						<option value="-" <?php if($appointment['medName'] == '-') echo 'selected'; ?>>-</option>
-                        <option value="PR0001-Paracetamol" <?php if($appointment['medName'] == 'PR0001-Paracetamol') echo 'selected'; ?>>PR0001-Paracetamol</option>
-                        <option value="PR0002-Ibuprofen" <?php if($appointment['medName'] == 'PR0002-Ibuprofen') echo 'selected'; ?>>PR0002-Ibuprofen</option>
-                        <option value="PR0003-Amoxicillin" <?php if($appointment['medName'] == 'PR0003-Amoxicillin') echo 'selected'; ?>>PR0003-Amoxicillin</option>
-                        <option value="PR0004-Methotrexate" <?php if($appointment['medName'] == 'PR0004-Methotrexate') echo 'selected'; ?>>PR0004-Methotrexate</option>
-                        <option value="PR0005-Diuretics" <?php if($appointment['medName'] == 'PR0005-Diuretics') echo 'selected'; ?>>PR0005-Diuretics</option>
-                        <option value="PR0006-Tramadol" <?php if($appointment['medName'] == 'PR0006-Tramadol') echo 'selected'; ?>>PR0006-Tramadol</option>
-                        <option value="PR0007-Fentanyl" <?php if($appointment['medName'] == 'PR0007-Fentanyl') echo 'selected'; ?>>PR0007-Fentanyl</option>
-                        <option value="PR0008-Oxycodone" <?php if($appointment['medName'] == 'PR0008-Oxycodone') echo 'selected'; ?>>PR0008-Oxycodone</option>
-                        <option value="PR0009-Trimethoprim" <?php if($appointment['medName'] == 'PR0009-Trimethoprim') echo 'selected'; ?>>PR0009-Trimethoprim</option>
-                        <option value="PR0010-Funderparinex" <?php if($appointment['medName'] == 'PR0010-Funderparinex') echo 'selected'; ?>>PR0010-Funderparinex</option>
+                    <label for="prescriptionID">Medicine Name:</label>
+                    <select id="prescriptionID" name="prescriptionID" required>
+						<option value="NULL" <?php if($appointment['prescriptionID'] == '-') echo 'selected'; ?>>-</option>
+                        <option value="PR0001" <?php if($appointment['prescriptionID'] == 'PR0001-Paracetamol') echo 'selected'; ?>>PR0001-Paracetamol</option>
+                        <option value="PR0002" <?php if($appointment['prescriptionID'] == 'PR0002-Ibuprofen') echo 'selected'; ?>>PR0002-Ibuprofen</option>
+                        <option value="PR0003" <?php if($appointment['prescriptionID'] == 'PR0003-Amoxicillin') echo 'selected'; ?>>PR0003-Amoxicillin</option>
+                        <option value="PR0004" <?php if($appointment['prescriptionID'] == 'PR0004-Methotrexate') echo 'selected'; ?>>PR0004-Methotrexate</option>
+                        <option value="PR0005" <?php if($appointment['prescriptionID'] == 'PR0005-Diuretics') echo 'selected'; ?>>PR0005-Diuretics</option>
+                        <option value="PR0006" <?php if($appointment['prescriptionID'] == 'PR0006-Tramadol') echo 'selected'; ?>>PR0006-Tramadol</option>
+                        <option value="PR0007" <?php if($appointment['prescriptionID'] == 'PR0007-Fentanyl') echo 'selected'; ?>>PR0007-Fentanyl</option>
+                        <option value="PR0008" <?php if($appointment['prescriptionID'] == 'PR0008-Oxycodone') echo 'selected'; ?>>PR0008-Oxycodone</option>
+                        <option value="PR0009" <?php if($appointment['prescriptionID'] == 'PR0009-Trimethoprim') echo 'selected'; ?>>PR0009-Trimethoprim</option>
+                        <option value="PR0010" <?php if($appointment['prescriptionID'] == 'PR0010-Funderparinex') echo 'selected'; ?>>PR0010-Funderparinex</option>
                     </select>
                     <button type="submit" class="submit-button">SUBMIT</button>
                 </form>
