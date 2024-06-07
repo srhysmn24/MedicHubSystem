@@ -12,24 +12,26 @@ include("dbconn.php");
 $pdo = $conn;
 
 $appointmentID = $_POST['appointmentID'];
-$userType = $_POST['userType'];
+$userType = $_POST['userType']; // Initialize $userType
+var_dump($userType); // Debugging line
 $userID = $_POST['userID'];
 
-if ($userType === 'doctor') {
+if (isset($userType) && $userType === 'doctor') {
     $diagnosis = $_POST['diagnosis'];
-    $medName = $_POST['medName'];
+    $prescriptionID = $_POST['prescriptionID'];
     $appointmentStatus = $_POST['appointmentStatus'];
 
     // Check if variables are defined and not null
-    if (!isset($diagnosis) || !isset($medName) || !isset($appointmentStatus)) {
+    if (!isset($diagnosis) || !isset($prescriptionID) || !isset($appointmentStatus)) {
         echo "One or more variables are not defined!";
         exit;
     }
 
-    $stmt = $pdo->prepare("UPDATE appointment SET diagnosis =?, appointmentStatus =? WHERE appointmentID =?");
+    $stmt = $pdo->prepare("UPDATE appointment SET diagnosis =?, appointmentStatus =?, prescriptionID =?  WHERE appointmentID =?");
     $stmt->bindParam(1, $diagnosis, PDO::PARAM_STR);
 	$stmt->bindParam(2, $appointmentStatus, PDO::PARAM_STR);
-	$stmt->bindParam(3, $appointmentID, PDO::PARAM_STR);
+	$stmt->bindParam(3, $prescriptionID, PDO::PARAM_STR);
+	$stmt->bindParam(4, $appointmentID, PDO::PARAM_STR);
     $stmt->execute();
 	$result = $stmt->execute();
 	if ($result) {
